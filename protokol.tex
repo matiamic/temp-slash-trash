@@ -1,0 +1,73 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+
+\title{\vspace{-1cm}Protokol č. 1: Měření objemu tuhých těles}
+\author{Michal Matiáš}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Zadání}
+Úkolem bylo:\\
+\begin{enumerate}
+\item Změřit průměr a výšku kovového válečku.
+\item Na základě naměřených hodnot vypočíst kombinovanou stadnardní nejistotu jednotlivých rozměrů.
+\item Vypočíst objem válečku a jeho kombinovanou standardní nejistotu.
+\end{enumerate}
+\section{Použité vybavení}
+Pro měření průměru válečku byl použit mikrometr se stupnicí o kroku 0,01 mm, Pro měření výšky válečku bylo použito posuvné meřítko se stupnicí o kroku 0,02 mm.
+
+\section{Naměřené hodnoty}
+V tabulce \ref{table:1} jsou uvedeny naměřené hodnoty pro průměr d a výšku h.
+\begin{center}
+\begin{table}[h!]
+\begin{tabular}{|| l | l | l | l | l | l | l | l | l | l | l ||}
+\hline
+Meření č. & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10\\
+\hline\hline
+d [mm] & 14,79 & 14,84 & 14,82 & 14,81 & 14,80 & 14,90 & 14,93 & 14,94 & 14,82 & 14,85\\
+\hline
+h [mm] & 37,40 & 37,36 & 37,44 & 37,38 & 37,44 & 37,40 & 37,38 & 37,40 & 37,36 & 37,42\\
+\hline
+\end{tabular}
+\caption{Nameřené hodnoty pro průměr d a výšku h válečku}
+\label{table:1}
+\end{table}
+\end{center}
+
+\section{Výpočet}
+Výpočet objemu a nejistot byl vypočten pomocí následujícího matlabovského skriptu, ve kterém \verb|uAx|, \verb|uBx| a \verb|uCx| jsou standardní nejistoty typu A, B a kombinovaná nejistota příslušné veličiny a \verb|V_mean| je výsledný objem:
+\newpage
+\begin{verbatim}
+clear; home;
+d = [14.79 14.84 14.82 14.81 14.80 14.90 14.93 14.94 14.82 14.85]
+h = [37.40 37.36 37.44 37.38 37.44 37.40 37.38 37.40 37.36 37.42]
+
+uAd = sqrt(1/(length(d)*(length(d) - 1))*sum((d - mean(d)) .^ 2))
+uAh = sqrt(1/(length(h)*(length(h) - 1))*sum((h - mean(h)) .^ 2))
+
+uBd = 0.01/sqrt(12)
+uBh = 0.02/sqrt(12)
+
+uCd = sqrt(uAd^2 + uBd^2)
+uCh = sqrt(uAh^2 + uBh^2)
+
+uCV = sqrt((1/2*pi*mean(d)*mean(h)*uCd)^2+(1/4*mean(d)^2*pi*uCh)^2)
+
+V_mean = 1/4*pi*mean(d)^2*mean(h)
+\end{verbatim}
+
+\section{Závěr}
+Naměřené hodnoty jsou uvedeny v tabulce \ref{table:1}. Po odečtení hodnot z matlabu a stanovení výsledku na dvě platné cifry dostáváme:\\
+$u_{C_d} = 0,017 mm$\\
+$u_{C_h} = 0,011 mm$\\
+$u_{C_V} = 15 mm$\\
+Můžeme psát:\\
+$\mathbf{d = (14,85 \pm 0,017)mm}$\\
+$\mathbf{h = (37,398 \pm 0,011)mm}$\\
+$\mathbf{V = (6477 \pm 15)mm^3}$
+
+\end{document}
